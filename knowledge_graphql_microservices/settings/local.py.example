@@ -1,0 +1,58 @@
+# For production, change this to import from settings.production
+from settings.base import *
+
+# For production, override SECRET_KEY
+
+# # For development:
+# # Debug toolbar
+# INSTALLED_APPS.append("debug_toolbar")
+# INTERNAL_IPS = ["127.0.0.1"]
+# MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+
+# # Trick to have debug toolbar when developing with docker
+# # Explanation: debug toolbar checks if the REMOTE_ADDR is in INTERNAL_IPS;
+# # for docker, the REMOTE_ADDR would be the container network's `router`,
+# # aka its internal IP address with the last octet replaced by .1,
+# # e.g. '192.168.96.10' => '192.168.96.1'
+# import socket
+# hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+# INTERNAL_IPS += ['.'.join(ip.split('.')[:-1]) + '.1' for ip in ips]
+
+# To use an external SMTP service, set:
+# EMAIL_HOST_USER = "TODO"
+# EMAIL_HOST_PASSWORD = "TODO (api key)"
+
+# Do run locally without docker uncomment following code lines
+# This overrides settings to use services from local machine instead
+# If project adds any other services then specify overrides for those as well
+# Media files root uses same directory as docker does
+# import socket  # noqa
+# if socket.gethostname() == "YOUR_MACHINE_NAME":
+#     # If defining different SITE_URLs, if not using 127.0.0.1
+#     # SITE_URL = "http://YOUR_MACHINE_IP:8000"
+#     # DJANGO_SITE_URL = "http://YOUR_MACHINE_IP:3000"
+#
+#     # Add proper database name, user and password here, if necessary
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql_psycopg2",
+#             "HOST": "localhost",
+#             "NAME": "knowledge_graphql_microservices",
+#             "USER": "knowledge_graphql_microservices",
+#             "PASSWORD": "knowledge_graphql_microservices",
+#         }
+#     }
+#
+#     # Redis config (used for caching and celery)
+#     REDIS_HOST = "localhost"
+#     REDIS_URL = "redis://%s:%d/%d" % (REDIS_HOST, REDIS_PORT, REDIS_DB)
+#
+#     # Override caching config
+#     CACHES["default"]["LOCATION"] = REDIS_URL
+#
+#     # Override media root for local
+#     MEDIA_ROOT = os.path.join(os.path.dirname(SITE_ROOT), ".data-media")
+
+# AWS_ACCESS_KEY_ID = "TODO (access key)"
+# AWS_SECRET_ACCESS_KEY = "TODO (secret key)"
+

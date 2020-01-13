@@ -1,0 +1,16 @@
+.idea
+
+app/node_modules/
+venv/
+
+.data/
+
+**/__pycache__
+*.pyo
+*.pyc
+
+knowledge_graphql_microservices/.cache
+knowledge_graphql_microservices/.pytest_cache
+knowledge_graphql_microservices/.coverage
+knowledge_graphql_microservices/coverage
+knowledge_graphql_microservices/cover/

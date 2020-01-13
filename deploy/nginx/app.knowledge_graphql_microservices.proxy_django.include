@@ -1,0 +1,2 @@
+include conf.d/app.knowledge_graphql_microservices.proxy.include;
+proxy_pass http://knowledge_graphql_microservices_django;

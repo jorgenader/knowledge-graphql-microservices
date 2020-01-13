@@ -1,0 +1,15 @@
+[run]
+branch = True
+source =
+    .
+
+omit =
+    */migrations/*
+    knowledge_graphql_microservices/wsgi.py
+    manage.py
+    fabfile.py
+    settings/*
+    *test*
+
+[html]
+directory = cover

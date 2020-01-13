@@ -1,0 +1,34 @@
+# Ignore everything in .idea
+.idea
+
+*.mo
+*.pyo
+*.pyc
+.sass-cache/
+yarn-error.log
+node_modules/
+venv/
+.cache/
+
+.data/
+
+knowledge_graphql_microservices/django.env
+knowledge_graphql_microservices/settings/local.py
+knowledge_graphql_microservices/settings/local_test.py
+knowledge_graphql_microservices/db.sqlite3
+knowledge_graphql_microservices/assets/
+
+knowledge_graphql_microservices/.cache
+knowledge_graphql_microservices/.pytest_cache
+knowledge_graphql_microservices/.coverage
+knowledge_graphql_microservices/coverage
+knowledge_graphql_microservices/cover/
+
+# Node Project files
+app/build/
+app/coverage/
+
+# Missing translations file
+**/locales/**/*.missing.json
+
+knowledge_graphql_microservices/docs/_build

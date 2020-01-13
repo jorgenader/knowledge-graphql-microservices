@@ -1,0 +1,62 @@
+# Docker-compose configuration for production
+
+version: '2.1'
+
+services:
+    django:
+        build:
+            context: .
+            dockerfile: Dockerfile-django.production
+        container_name: knowledge_graphql_microservices_django
+        restart: unless-stopped
+        volumes:
+            - "/var/lib/docker-nginx/files/knowledge_graphql_microservices/assets:/files/assets"
+            - "/var/log/knowledge_graphql_microservices:/var/log/knowledge_graphql_microservices"
+        # For some reason the command also has to be specified here, otherwise the entrypoint+command combination won't
+        #  work.
+        entrypoint: /usr/bin/wait-for-it.sh postgres:5432 -t 60 --
+        command: gunicorn knowledge_graphql_microservices.wsgi:application --workers 2 --bind :80
+        networks:
+            - default
+            - knowledge_graphql_microservices_nginx
+            - knowledge_graphql_microservices_postgres
+        depends_on:
+            - redis
+        external_links:
+            - postgres-10:postgres
+
+    node:
+        build:
+            context: .
+            dockerfile: Dockerfile-node.production
+        container_name: knowledge_graphql_microservices_node
+        restart: unless-stopped
+        command: yarn start
+        volumes:
+            - "/var/lib/docker-nginx/files/knowledge_graphql_microservices/app/assets:/files/assets"
+            - "/var/log/knowledge_graphql_microservices:/var/log/knowledge_graphql_microservices"
+        networks:
+            - default
+            - knowledge_graphql_microservices_nginx
+
+    redis:
+        image: redis:4.0.10-alpine
+        restart: unless-stopped
+        sysctls:
+            # To allow maintaining TCP backlog setting that defaults to 511
+            net.core.somaxconn: 512
+        volumes:
+            - "/var/lib/docker-knowledge_graphql_microservices/redis:/data"
+        networks:
+            - default
+
+# NB: These networks must be created by fabfile and contain the global nginx/postgres containers.
+# Keep it in sync with fabfile!
+networks:
+    default:
+        external:
+            name: knowledge_graphql_microservices_default
+    knowledge_graphql_microservices_nginx:
+        external: true
+    knowledge_graphql_microservices_postgres:
+        external: true
