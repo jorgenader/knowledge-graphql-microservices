@@ -1,5 +1,5 @@
 # Development Dockerfile for Django app
-FROM python:3.8-alpine3.8
+FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 0
 

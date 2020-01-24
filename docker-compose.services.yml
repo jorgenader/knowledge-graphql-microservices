@@ -1,0 +1,45 @@
+# Docker-compose configuration for development
+
+version: '3'
+
+services:
+    postgres:
+        image: postgres:10
+        ports:
+            - "5433:5433"
+        volumes:
+            - ".data/postgres:/var/lib/postgresql/data"
+        environment:
+            POSTGRES_USER: knowledge_graphql_microservices
+            POSTGRES_PASSWORD: knowledge_graphql_microservices
+
+    mongodb:
+        image: mongo:4.0-xenial
+        environment:
+          MONGO_INITDB_DATABASE: knowledge_graphql_microservices
+          MONGO_INITDB_ROOT_USERNAME: knowledge_graphql_microservices
+          MONGO_INITDB_ROOT_PASSWORD: knowledge_graphql_microservices
+          MONGODB_DATA_DIR: /data/db
+          MONDODB_LOG_DIR: /dev/null
+        ports:
+            - "27017-27019:27017-27019"
+        volumes:
+            - ".data/mongodb:/data/db"
+
+    redis:
+        image: redis:4.0.10-alpine
+        ports:
+            - "6380:6379"
+        sysctls:
+            # To allow maintaining TCP backlog setting that defaults to 511
+            net.core.somaxconn: 512
+        volumes:
+            - ".data/redis:/data"
+
+    mailhog:
+        image: mailhog/mailhog:v1.0.0
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        logging:
+            driver: "none"

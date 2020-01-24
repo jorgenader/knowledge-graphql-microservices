@@ -312,8 +312,3 @@ endif
 
 psql:
 	docker-compose exec postgres psql --user $(PROJECT_NAME) --dbname $(PROJECT_NAME)
-
-
-docs:
-	docker-compose run --rm django sphinx-build ./docs ./docs/_build
-

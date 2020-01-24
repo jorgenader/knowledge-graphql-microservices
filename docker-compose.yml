@@ -1,6 +1,6 @@
 # Docker-compose configuration for development
 
-version: '2.1'
+version: '3'
 
 services:
     django:
@@ -23,7 +23,7 @@ services:
             - redis
             - mailhog
 
-    node:
+    frontend:
         build:
             context: .
             dockerfile: Dockerfile-node
@@ -38,8 +38,6 @@ services:
 
     postgres:
         image: postgres:10
-        # Comment in the following lines to connect to your Dockerized instance of Postgres from your host machine.
-        # Change the host port (before colon) if you have a local instance of Postgres running on that port.
         # ports:
         #     - "5432:5432"
         volumes:

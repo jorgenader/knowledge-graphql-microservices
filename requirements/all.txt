@@ -1,0 +1,3 @@
+-r accounts.txt
+-r rooms.txt
+-r messages.txt

@@ -4,12 +4,21 @@ FROM node:12-alpine
 # Install system requirements
 RUN apk add --no-cache alpine-sdk python bash
 
+
 # Set the default directory where CMD will execute
 WORKDIR /app
 
+COPY . /app
+
+RUN yarn install --production --frozen-lockfile
+
+RUN yarn build
+
+ARG PORT=4000
+ENV PORT $PORT
+
 # Expose our application ports
-EXPOSE 8000
-EXPOSE 8001
+EXPOSE $PORT
 
 # Set the default command to execute when creating a new container
-CMD /bin/bash -c "yarn && yarn dev"
+CMD yarn start

@@ -9,20 +9,27 @@ yarn-error.log
 node_modules/
 venv/
 .cache/
+.nvmrc
+.venv
+
+graphql-proxy/.env
+gql_accounts_service/.env
+gql_messages_service/.env
+gql_rooms_service/.env
 
 .data/
 
-knowledge_graphql_microservices/django.env
-knowledge_graphql_microservices/settings/local.py
-knowledge_graphql_microservices/settings/local_test.py
-knowledge_graphql_microservices/db.sqlite3
-knowledge_graphql_microservices/assets/
+service_*/django.env
+service_*/settings/local.py
+service_*/settings/local_test.py
+service_*/db.sqlite3
+service_*/assets/
 
-knowledge_graphql_microservices/.cache
-knowledge_graphql_microservices/.pytest_cache
-knowledge_graphql_microservices/.coverage
-knowledge_graphql_microservices/coverage
-knowledge_graphql_microservices/cover/
+service_*/.cache
+service_*/.pytest_cache
+service_*/.coverage
+service_*/coverage
+service_*/cover/
 
 # Node Project files
 app/build/
@@ -30,5 +37,3 @@ app/coverage/
 
 # Missing translations file
 **/locales/**/*.missing.json
-
-knowledge_graphql_microservices/docs/_build

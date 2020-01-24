@@ -1,5 +1,5 @@
 # Based on Node 10 Alpine image
-FROM node:10-alpine
+FROM node:12-alpine
 
 # Set the default directory where CMD will execute
 WORKDIR /app

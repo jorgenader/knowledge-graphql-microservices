@@ -1,6 +1,6 @@
 # Production Dockerfile for Django app
 
-FROM python:3.8-alpine3.8 as base
+FROM python:3.8-alpine as base
 
 ENV DJANGO_PRODUCTION_MODE 1
 

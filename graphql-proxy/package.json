@@ -1,0 +1,22 @@
+{
+  "name": "graphql-proxy",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write index.ts",
+    "build": "tsc",
+    "start": "node lib/index.js"
+  },
+  "dependencies": {
+    "@apollo/federation": "^0.11.3",
+    "@apollo/gateway": "^0.11.7",
+    "apollo-server": "^2.9.16",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8",
+    "ts-node": "^8.6.1",
+    "typescript": "^3.7.4"
+  },
+  "devDependencies": {
+    "prettier": "1.19.1"
+  }
+}
