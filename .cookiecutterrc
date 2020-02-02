@@ -35,7 +35,7 @@
         "include_docs": "yes",
         "live_host": "production.TODO.com",
         "live_hostname": "TODO.com",
-        "node_version": "10",
+        "node_version": "12",
         "postgres_version": "10",
         "project_title": "knowledge graphql microservices",
         "python_version": "3.8",

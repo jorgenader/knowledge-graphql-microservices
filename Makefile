@@ -298,6 +298,29 @@ compilemessages:
 	docker-compose run --rm django ./manage.py compilemessages
 
 
+start-services:
+	docker-compose -f docker-compose.services.yml up -d
+
+
+stop-services:
+	docker-compose -f docker-compose.services.yml down
+
+
+start-stack:
+	docker-compose -f docker-compose.stack.yml up -d
+
+
+stop-stack:
+	docker-compose -f docker-compose.stack.yml down
+
+
+ensure-local-dependencies:
+	@ pip install -r requirements/accounts.txt
+	@ pip install -r requirements/lists.txt
+	@ pip install -r requirements/products.txt
+
+
+
 add-locale: $(SITE_ROOT)/locale
 ifdef LOCALE
 	@echo "Adding new locale $(LOCALE)"

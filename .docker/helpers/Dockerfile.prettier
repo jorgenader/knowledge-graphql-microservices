@@ -1,0 +1,15 @@
+# Based on Node 12 Alpine image
+FROM node:12-alpine
+
+# Install system requirements
+RUN apk add --no-cache alpine-sdk python bash
+
+# Install prettier for formatting
+# KEEP THIS VERSION IN SYNC WITH THE ONE USED IN PACKAGE
+RUN yarn global add "prettier@1.19.1"
+
+# Set the default directory where CMD will execute
+WORKDIR /app
+VOLUME /app
+
+CMD yarn check-formatting

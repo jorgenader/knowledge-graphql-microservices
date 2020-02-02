@@ -12,9 +12,9 @@ dotEnv.config();
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
 
-const USERS_SERVICE = process.env.USERS_SERVICE_URL;
-const ROOMS_SERVICE = process.env.ROOMS_SERVICE_URL;
-const MESSAGES_SERVICE = process.env.MESSAGES_SERVICE_URL;
+const ACCOUNTS_SERVICE = process.env.ACCOUNTS_SERVICE_URL;
+const PRODUCTS_SERVICE = process.env.PRODUCTS_SERVICE_URL;
+const LISTS_SERVICE = process.env.LISTS_SERVICE_URL;
 
 interface GraphQLProxyContext {
     userId?: string;
@@ -41,14 +41,14 @@ const server = new ApolloServer({
 
     gateway: new ApolloGateway({
         serviceList: [
-            { name: 'users', url: USERS_SERVICE },
-            { name: 'rooms', url: ROOMS_SERVICE },
-            { name: 'messages', url: MESSAGES_SERVICE },
+            { name: 'accounts', url: `${ACCOUNTS_SERVICE}/graphql` },
+            { name: 'products', url: `${PRODUCTS_SERVICE}/graphql` },
+            { name: 'lists', url: `${LISTS_SERVICE}/graphql` },
         ],
 
-        buildService({ url }: ServiceEndpointDefinition) {
-            return new AuthenticatedDataSource({ url });
-        },
+        // buildService({ url }: ServiceEndpointDefinition) {
+        //     return new AuthenticatedDataSource({ url });
+        // },
     }),
 });
 

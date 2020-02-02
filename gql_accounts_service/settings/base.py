@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "accounts",
     "gql_accounts_service",
     # Third-party apps
-    "rest_framework",
+    "graphene_django",
     "django_filters",
     "tg_react",
     "crispy_forms",
@@ -64,6 +64,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+]
+
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 
@@ -116,7 +122,6 @@ DATABASES = {
 # Redis config (used for caching)
 REDIS_URL = env.str("DJANGO_REDIS_URL", default="redis://redis:6379/1")
 REDIS_CACHE_URL = env.str("DJANGO_REDIS_CACHE_URL", default=REDIS_URL)
-REDIS_CELERY_URL = env.str("DJANGO_REDIS_CELERY_URL", default=REDIS_URL)
 
 
 # Caching
@@ -249,20 +254,23 @@ SILENCED_SYSTEM_CHECKS = [
 ]
 
 
-# Rest framework configuration
-REST_FRAMEWORK = {
-    # Disable Basic auth
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # By default api session authentication is not used
-        # "rest_framework.authentication.SessionAuthentication",
-    ),
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
-    # Change default full-url media files to be only stored path, needs /media prepended in frontend
-    "UPLOADED_FILES_USE_URL": False,
-    # Default request format in tests is json
-    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+# GraphQL configuration
+GRAPHENE = {
+    "SCHEMA": "schema.schema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
 }
+
+
+GRAPHQL_JWT = {
+    "JWT_SECRET_KEY": env.str("DJANGO_JWT_SECRET_KEY", "knowledge_graphql_microservices"),
+    "JWT_ALLOW_ARGUMENT": True,
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_EXPIRATION_DELTA": timedelta(minutes=15),
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=30),
+}
+
 
 # Default values for sentry
 RAVEN_BACKEND_DSN = env.str(
@@ -272,18 +280,6 @@ RAVEN_PUBLIC_DSN = env.str(
     "DJANGO_RAVEN_PUBLIC_DSN", default="https://TODO@sentry.thorgate.eu/TODO"
 )
 RAVEN_CONFIG = {"dsn": RAVEN_BACKEND_DSN}
-
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "USER_ID_FIELD": "pk",
-    "USER_ID_CLAIM": "user_id",
-}
 
 
 # CORS settings

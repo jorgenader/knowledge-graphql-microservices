@@ -1,0 +1,59 @@
+# Production Dockerfile for Django app
+
+FROM python:3.8-slim as base
+
+ENV DJANGO_PRODUCTION_MODE 1
+
+# Create a directory for the logs
+RUN mkdir -p /var/log/knowledge_graphql_microservices
+
+COPY ./wait-for-it.sh /usr/bin/
+
+# Install system requirements
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends gcc gettext libpq-dev git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN pip install -U "poetry==1.*"
+
+COPY pyproject.toml /
+COPY poetry.lock /
+
+# Install all dependencies from Pipfile.lock file
+RUN pipenv install --system --ignore-pipfile
+
+# Find all file objects containing name `test` or compiled python files and remove them
+# Find all runtime dependencies that are marked as needed by scanelf
+# scanelf is utility to show ELF data for binary objects
+# For more info: https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities#The_scanelf_application
+# Finally re-install missing run-dependencies
+RUN find /usr/local \
+        \( -type d -a -name test -o -name tests \) \
+        -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+        -exec rm -rf '{}' + \
+  && runDeps="$( \
+        scanelf --needed --nobanner --recursive /usr/local \
+                | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+                | sort -u \
+                | xargs -r apk info --installed \
+                | sort -u \
+    )" \
+  && apk add --virtual .rundeps $runDeps
+
+# Remove build dependencies
+RUN apk del .build-deps
+
+# Copy code
+COPY ./knowledge_graphql_microservices /app
+
+# Set the default directory where CMD will execute
+WORKDIR /app
+
+# Compile translations to .mo files
+# Un-comment this when locale directory has been created
+#RUN python manage.py compilemessages
+
+# Run Gunicorn by default
+CMD gunicorn knowledge_graphql_microservices.wsgi:application --workers 2 --bind :80

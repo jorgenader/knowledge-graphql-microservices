@@ -1,0 +1,10 @@
+FROM python:3.8-slim
+
+# Install black for formatting
+RUN pip install black
+
+# Set the default directory where CMD will execute
+WORKDIR /app
+VOLUME /app
+
+CMD black --exclude fabfile.py --check .

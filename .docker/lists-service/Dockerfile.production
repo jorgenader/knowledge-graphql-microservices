@@ -1,0 +1,32 @@
+# Production Dockerfile for Django app
+
+FROM python:3.8-slim as base
+
+# Create a directory for the logs
+RUN mkdir -p /var/log/knowledge_graphql_microservices
+
+COPY ./wait-for-it.sh /usr/bin/
+
+# Install system requirements
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends gcc gettext libpq-dev git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN pip install -U "poetry==1.*"
+
+COPY pyproject.toml /
+COPY poetry.lock /
+
+# Install all dependencies from Pipfile.lock file
+RUN pipenv install --system --ignore-pipfile
+
+# Copy code
+COPY . /app
+
+# Set the default directory where CMD will execute
+WORKDIR /app
+
+# Run Gunicorn by default
+CMD gunicorn products_service.application --workers 2 --bind :80

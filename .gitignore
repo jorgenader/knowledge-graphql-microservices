@@ -14,14 +14,14 @@ venv/
 
 graphql-proxy/.env
 gql_accounts_service/.env
-gql_messages_service/.env
-gql_rooms_service/.env
+gql_lists_service/.env
+gql_products_service/.env
 
 .data/
 
-service_*/django.env
-service_*/settings/local.py
-service_*/settings/local_test.py
+gql_accounts_service/django.env
+gql_accounts_service/settings/local.py
+gql_accounts_service/settings/local_test.py
 service_*/db.sqlite3
 service_*/assets/
 

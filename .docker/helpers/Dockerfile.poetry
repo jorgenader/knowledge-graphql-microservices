@@ -1,0 +1,8 @@
+# Dockerfile for Poetry wrapper
+
+FROM python:3.8-slim
+
+VOLUME /app
+WORKDIR /app
+
+RUN pip install -U "poetry=1.*"

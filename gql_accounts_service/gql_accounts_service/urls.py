@@ -2,14 +2,17 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
+
+from graphene_django.views import GraphQLView
 
 
 admin.autodiscover()
 
 urlpatterns = [
-    url(r"^api/", include("knowledge_graphql_microservices.rest.urls")),
     url(r"^adminpanel/", admin.site.urls),
+    url(r"^graphql$", csrf_exempt(GraphQLView.as_view(graphiql=settings.DEBUG))),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

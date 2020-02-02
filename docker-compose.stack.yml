@@ -1,0 +1,97 @@
+# Docker-compose configuration for development
+
+version: '3'
+
+services:
+    accouncts-service:
+        build:
+            context: .
+            dockerfile: Dockerfile-django
+        ports:
+            - "3001:80"
+        volumes:
+            - "./knowledge_graphql_microservices:/app"
+            - ".data/media:/files/media"
+        environment:
+            - PYTHONUNBUFFERED=0
+        # Add -Wall option to see the (deprecation) warnings
+        # command: python -Wall manage.py runserver 0.0.0.0:80
+        command: python manage.py runserver 0.0.0.0:80
+        entrypoint: /usr/bin/wait-for-it.sh postgres:5432 -t 60 --
+        depends_on:
+            - postgres
+            - redis
+            - mailhog
+
+    lists-service:
+        build:
+            context: gql_lists_service
+            dockerfile: .docker/lists-service
+        ports:
+            - "3002:80"
+        volumes:
+            - "./gql_lists_service:/app"
+        depends_on:
+            - mongodb
+
+    products-service:
+        build:
+            context: gql_products_service
+            dockerfile: .docker/products-service
+        ports:
+            - "3003:80"
+        volumes:
+            - "./gql_products_service:/app"
+        depends_on:
+            - mongodb
+
+    graphql-proxy:
+        build:
+            context: graphql-proxy
+            dockerfile: .docker/graphql-proxy
+        environment:
+            ACCOUNTS_SERVICE_URL: http://accouncts-service
+            PRODUCTS_SERVICE_URL: http://products-service
+            LISTS_SERVICE_URL: http://lists-service
+        ports:
+            - "4000"
+        depends_on:
+            - accouncts-service
+            - lists-service
+            - products-service
+
+    postgres:
+        image: postgres:10
+        volumes:
+            - ".data/postgres:/var/lib/postgresql/data"
+        environment:
+            POSTGRES_USER: knowledge_graphql_microservices
+            POSTGRES_PASSWORD: knowledge_graphql_microservices
+
+    mongodb:
+        image: mongo:4.0-xenial
+        environment:
+            MONGO_INITDB_DATABASE: knowledge_graphql_microservices
+            MONGO_INITDB_ROOT_USERNAME: knowledge_graphql_microservices
+            MONGO_INITDB_ROOT_PASSWORD: knowledge_graphql_microservices
+            MONGODB_DATA_DIR: /data/db
+            MONDODB_LOG_DIR: /dev/null
+        ports:
+            - "27017-27019:27017-27019"
+        volumes:
+            - ".data/mongodb:/data/db"
+
+    redis:
+        image: redis:4.0.10-alpine
+        sysctls:
+            # To allow maintaining TCP backlog setting that defaults to 511
+            net.core.somaxconn: 512
+        volumes:
+            - ".data/redis:/data"
+
+    mailhog:
+        image: mailhog/mailhog:v1.0.0
+        ports:
+            - "8025:8025"
+        logging:
+            driver: "none"

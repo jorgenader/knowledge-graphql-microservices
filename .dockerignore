@@ -3,6 +3,11 @@
 app/node_modules/
 venv/
 
+# Ensure .venv and .env are still locally editable
+# E.g these should be mounted into the container
+.venv
+.env
+
 .data/
 
 **/__pycache__
