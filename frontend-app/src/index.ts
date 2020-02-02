@@ -1,8 +1,8 @@
 import http, { IncomingMessage, Server, ServerResponse } from 'http';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
-import logger from './server/logger';
-import { SETTINGS } from './settings';
+import logger from '@frontend-core/server/logger';
+import { SETTINGS } from '@frontend-app/settings';
 
 const createServer = () => {
     const PORT: number = process.env.PORT as any;

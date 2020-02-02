@@ -23,7 +23,8 @@
     "target": "es2016",
     "baseUrl": "./",
     "paths": {
-      "@frontend-app/*": ["src/*/index", "src/*"]
+      "@frontend-app/*": ["src/*/index", "src/*"],
+      "@frontend-core/*": ["src/core/index", "src/core/*"]
     }
   },
   "exclude": [

@@ -10,7 +10,7 @@ services:
         ports:
             - "3001:80"
         volumes:
-            - "./knowledge_graphql_microservices:/app"
+            - "./gql_accounts_service:/app"
             - ".data/media:/files/media"
         environment:
             - PYTHONUNBUFFERED=0
@@ -53,8 +53,12 @@ services:
             ACCOUNTS_SERVICE_URL: http://accouncts-service
             PRODUCTS_SERVICE_URL: http://products-service
             LISTS_SERVICE_URL: http://lists-service
+            WATCH_DIRECTORY: /services
+        volumes:
+            - ".:/services"
         ports:
             - "4000"
+        command: "yarn start:dev"
         depends_on:
             - accouncts-service
             - lists-service

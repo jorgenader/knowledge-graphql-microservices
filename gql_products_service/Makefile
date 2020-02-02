@@ -7,7 +7,7 @@ SITE_ROOT = $(PROJECT_ROOT)/gql_products_service
 include ../Makefile
 
 
-start:
+start-product-service:
 	@ export FLASK_APP=products_service.application && \
 	  export FLASK_ENV=development && \
 	  flask run --port 3003

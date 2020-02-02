@@ -5,7 +5,8 @@
   "scripts": {
     "format": "prettier --write index.ts",
     "build": "tsc",
-    "start": "node lib/index.js"
+    "start": "node lib/index.js",
+    "start:dev": "yarn build && nodemon --delay 5 -e py --watch $WATCH_DIRECTORY --ignore node_modules --ignore venv lib/index.js"
   },
   "dependencies": {
     "@apollo/federation": "^0.11.3",
@@ -17,6 +18,7 @@
     "typescript": "^3.7.4"
   },
   "devDependencies": {
+    "nodemon": "^2.0.2",
     "prettier": "1.19.1"
   }
 }

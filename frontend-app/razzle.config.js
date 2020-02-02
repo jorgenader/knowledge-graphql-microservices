@@ -78,6 +78,7 @@ module.exports = {
         // adding ./src to module resolver so I can import modules with absolute paths
         config.resolve.modules.push('./src');
         config.resolve.alias['@frontend-app'] = paths.appSrc;
+        config.resolve.alias['@frontend-core'] = `${paths.appSrc}/core`;
 
         return config;
     },

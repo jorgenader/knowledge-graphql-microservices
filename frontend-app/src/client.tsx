@@ -10,11 +10,11 @@ import { useSSR } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import { NamedRouteConfig, RenderChildren } from 'tg-named-routes';
 
-import { setupI18Next } from './configuration/i18n';
-import { routes } from './configuration/routes';
-import { AuthProvider } from './containers/AuthProvider';
-import { createApolloClient } from './services/apollo';
-import { SETTINGS } from './settings';
+import { setupI18Next } from '@frontend-core/configuration/i18n';
+import { routes } from '@frontend-core/configuration/routes';
+import { AuthProvider } from '@frontend-core/containers/AuthProvider';
+import { createApolloClient } from '@frontend-core/services/apollo';
+import { SETTINGS } from '@frontend-app/settings';
 
 // Configure Sentry only in production
 if (process.env.NODE_ENV === 'production') {
@@ -75,7 +75,7 @@ async function initReactApp() {
 initReactApp();
 
 if (module.hot) {
-    module.hot.accept('./configuration/routes', () => {
+    module.hot.accept('@frontend-core/configuration/routes', () => {
         renderApp(routes);
     });
 }

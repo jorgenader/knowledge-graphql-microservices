@@ -40,7 +40,7 @@ EMAIL_SUBJECT_PREFIX = "[knowledge graphql microservices] "  # subject prefix fo
 # Tg React Url configurations should be same as frontend forgot password URL
 TGR_PASSWORD_RECOVERY_URL = "/auth/reset-password/%s"
 
-SESSION_COOKIE_NAME = "gql_accounts_service_ssid"
+SESSION_COOKIE_NAME = "knowledge_graphql_microservices_ssid"
 SESSION_COOKIE_DOMAIN = env.str("DJANGO_SESSION_COOKIE_DOMAIN", default=None)
 
 CSRF_COOKIE_DOMAIN = env.str("DJANGO_CSRF_COOKIE_DOMAIN", default=None)
@@ -265,10 +265,10 @@ GRAPHENE = {
 
 GRAPHQL_JWT = {
     "JWT_SECRET_KEY": env.str("DJANGO_JWT_SECRET_KEY", "knowledge_graphql_microservices"),
-    "JWT_ALLOW_ARGUMENT": True,
     "JWT_VERIFY_EXPIRATION": True,
-    "JWT_EXPIRATION_DELTA": timedelta(minutes=15),
-    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=30),
+    "JWT_EXPIRATION_DELTA": timedelta(days=15),  # TODO: REWORK ENTIRE TOKEN SYSTEM
+    "JWT_PAYLOAD_GET_USERNAME_HANDLER": lambda payload: payload.get('identity'),
+    "JWT_PAYLOAD_HANDLER": "gql_accounts_service.jwt.create_jwt_payload",
 }
 
 

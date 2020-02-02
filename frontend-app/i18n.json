@@ -1,6 +1,8 @@
 {
   "DEFAULT_NAMESPACE": "translations",
   "TRANSLATION_NAMESPACES": [
+    "auth",
+    "common",
     "translations"
   ],
   "FALLBACK_LANGUAGE": "en",

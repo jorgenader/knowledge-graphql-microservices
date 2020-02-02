@@ -1,0 +1,14 @@
+query ShoppingLists {
+    shoppingLists {
+        edges {
+            node {
+                id
+                name
+                owner {
+                    id
+                    email
+                }
+            }
+        }
+    }
+}

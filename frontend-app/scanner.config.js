@@ -5,6 +5,7 @@ const fs = require('fs');
 const eol = require('eol');
 const path = require('path');
 const VirtualFile = require('vinyl');
+const typescriptTransform = require('i18next-scanner-typescript');
 
 const i18nSettings = require('./i18n.json');
 
@@ -13,16 +14,25 @@ const appDir = path.resolve(__dirname);
 
 module.exports = {
     input: [
-        'src/**/*.{js,jsx,ts,tsx}',
+        'src/**/*.{ts,tsx}',
     ],
     output: './public/locales',
     options: {
         plural: true,
         removeUnusedKeys: false,
-        sort: false,
+        sort: true,
         attr: { extensions: [] },
-        func: { extensions: [] },
-        trans: { extensions: [] },
+        func: {
+            list: ['_', '__', 'i18next.t', 'i18n.t', 't'],
+            extensions: [],
+        },
+        trans: {
+            component: 'Trans',
+            i18nKey: 'i18nKey',
+            defaultsKey: 'defaults',
+            fallbackKey: (ns, value) => value,
+            extensions: [],
+        },
         lngs: i18nSettings.LANGUAGE_ORDER,
         ns: i18nSettings.TRANSLATION_NAMESPACES,
         defaultLng: i18nSettings.DEFAULT_LANGUAGE,
@@ -42,30 +52,7 @@ module.exports = {
             suffix: '}}',
         },
     },
-    transform(file, enc, done) {
-        const parser = this.parser;
-
-        const content = fs.readFileSync(file.path, enc);
-        const code = require('@babel/core').transformSync(content, {
-            // Required plugins to parse code but keep it close to the source
-            // This is for handling jsx syntax, dynamic imports and optional chaining
-            plugins: [
-                '@babel/plugin-syntax-jsx',
-                '@babel/plugin-syntax-dynamic-import',
-                '@babel/plugin-proposal-optional-chaining',
-            ],
-        });
-        parser.parseFuncFromString(code.code, {
-            list: ['_', '__', 'i18next.t', 'i18n.t', 't'],
-        });
-        parser.parseTransFromString(code.code, {
-            component: 'Trans',
-            i18nKey: 'i18nKey',
-            defaultsKey: 'defaults',
-            fallbackKey: (ns, value) => value,
-        });
-        done();
-    },
+    transform: typescriptTransform(),
     flush(done) {
         const { parser } = this;
         const { options } = parser;

@@ -94,10 +94,7 @@ type RuntimeConfig = Pick<
 
 const settings: Settings = {
     __VERSION__: process.env.RAZZLE_COMMIT_HASH || '-',
-    API_BASE: '/graphql/',
-    AUTH_REFRESH_TOKEN_NAME: 'project_light_keepers_refresh_token',
-    AUTH_TOKEN_LIFETIME: 30, // This value is in minutes
-    AUTH_TOKEN_NAME: 'project_light_keepers_token',
+    API_BASE: '/graphql',
     BACKEND_SITE_URL: parseString(
         process.env.RAZZLE_BACKEND_SITE_URL,
         'http://todo.com'
@@ -114,7 +111,7 @@ const settings: Settings = {
     DJANGO_ADMIN_PANEL: '/tagauks/',
     FALLBACK_LANGUAGE: '',
     LANGUAGES: {},
-    LANGUAGE_COOKIE_NAME: 'project_light_keepers_language',
+    LANGUAGE_COOKIE_NAME: 'knowledge_graphql_microservices_language',
     LANGUAGE_ORDER: [],
     SENTRY_PUBLIC_DSN: process.env.RAZZLE_SENTRY_PUBLIC_DSN,
     SITE_URL: process.env.RAZZLE_SITE_URL,

@@ -14,4 +14,6 @@ class EnvConfig:
 
     MONGO_HOST = env.str("MONGODB_HOST", "mongodb")
 
+    JWT_HEADER_TYPE = "JWT"
+
     JWT_SECRET_KEY = env.str('JWT_SECRET_KEY', 'knowledge_graphql_microservices')

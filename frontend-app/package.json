@@ -131,6 +131,7 @@
     "apollo": "2.21.0",
     "apollo-codegen-typescript": "0.35.7",
     "i18next-scanner": "2.10.2",
+    "i18next-scanner-typescript": "1.0.3",
     "prettier": "1.18.2",
     "stylelint": "10.1.0",
     "stylelint-config-standard": "18.3.0",

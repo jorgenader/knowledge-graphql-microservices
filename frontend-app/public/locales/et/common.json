@@ -1,0 +1,19 @@
+{
+  "adminPanel": {
+    "linkName": ""
+  },
+  "header": {
+    "defaultDescription": ""
+  },
+  "links": {
+    "brand": ""
+  },
+  "pageNotFound": {
+    "description": "",
+    "title": ""
+  },
+  "permissionDenied": {
+    "description": "",
+    "title": ""
+  }
+}

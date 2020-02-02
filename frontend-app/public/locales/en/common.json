@@ -1,0 +1,19 @@
+{
+  "adminPanel": {
+    "linkName": "Admin"
+  },
+  "header": {
+    "defaultDescription": "Awesome shopping list"
+  },
+  "links": {
+    "brand": "Shopping lists"
+  },
+  "pageNotFound": {
+    "description": "We could not find the page you were looking for.",
+    "title": "Page not Found"
+  },
+  "permissionDenied": {
+    "description": "You do not have permission to view this page.",
+    "title": "Permission denied"
+  }
+}

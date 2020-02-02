@@ -1,5 +1,0 @@
-mutation VerifyToken($token: String!) {
-  verifyToken(token: $token) {
-    payload
-  }
-}
