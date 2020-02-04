@@ -1,15 +1,15 @@
-from graphene import Field, ID, List, ObjectType
+from graphene import Field, ID, ObjectType, String
 from graphene.relay import Node
 from graphene_federation import extend, external, key
-from graphene_mongo import MongoengineObjectType
+from graphene_mongo import MongoengineObjectType, MongoengineConnectionField
 
 from lists_service.context import GraphQLContext
 from lists_service.models import ShoppingListModel, Product as ProductModel
 
 
-@extend("id")
+@extend("email")
 class User(ObjectType):
-    id = external(ID(required=True))
+    email = external(String(required=True))
 
 
 @extend("id")
@@ -25,7 +25,7 @@ class Product(MongoengineObjectType):
 class ShoppingList(MongoengineObjectType):
     owner = Field(User)
 
-    products = Field(List(Product))
+    products = MongoengineConnectionField(Product)
 
     def __resolve_reference(self, info, **kwargs):
         context: GraphQLContext = info.context

@@ -3,6 +3,20 @@ from django.template import Context, Engine, loader, TemplateDoesNotExist
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import requires_csrf_token
 
+from graphene_django.views import GraphQLView
+
+from schema.accounts.data_loaders import UsersByEmailLoader, UsersByIdLoader
+
+
+class WithDataLoadersGraphQLView(GraphQLView):
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        setattr(context, 'users_by_id', UsersByIdLoader())
+        setattr(context, 'users_by_email', UsersByEmailLoader())
+
+        return context
+
 
 def sentry_id_from_request(request):
     if getattr(request, "sentry", None) is not None:

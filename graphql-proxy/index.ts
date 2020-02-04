@@ -6,7 +6,7 @@ import {
     ServiceEndpointDefinition,
     RemoteGraphQLDataSource,
 } from '@apollo/gateway';
-import express from "express";
+import express from 'express';
 
 // Load config values from env
 dotEnv.config();
@@ -17,11 +17,7 @@ const ACCOUNTS_SERVICE = process.env.ACCOUNTS_SERVICE_URL;
 const PRODUCTS_SERVICE = process.env.PRODUCTS_SERVICE_URL;
 const LISTS_SERVICE = process.env.LISTS_SERVICE_URL;
 
-// TODO: Make session cookies work and drop JWT maybe
-const responseHeadersToForward: Array<string> = [
-    // Forward any cookies that the backends set.
-    'set-cookie',
-];
+const responseHeadersToForward: Array<string> = ['vary', 'set-cookie'];
 
 interface GraphQLProxyContext {
     token?: string;
@@ -29,7 +25,10 @@ interface GraphQLProxyContext {
 }
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
-    async process<TContext>({ request, context }: Pick<GraphQLRequestContext<TContext>, 'request' | 'context'>) {
+    async process<TContext>({
+        request,
+        context,
+    }: Pick<GraphQLRequestContext<TContext>, 'request' | 'context'>) {
         // `response` here is the response we got back from the backend.
         const response = await super.process({
             request,
@@ -42,11 +41,14 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
             const { http } = response;
             const { res } = contextData;
 
+            // TODO: Add cookie-parser and see if it works
+            //  Otherwise switch to koa or apollo-server-express
             responseHeadersToForward.forEach(name => {
                 const value = http.headers.get(name);
                 if (value != null) {
                     // `res` is the response we are sending to the client.
-                    res.set(name, value);
+                    res.setHeader(name, value);
+                    console.log(`<- HEADERS: ${name} = ${value}`);
                 }
             });
         }
@@ -59,12 +61,6 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
         context,
     }: Pick<GraphQLRequestContext<TContext>, 'request' | 'context'>) {
         const contextData: GraphQLProxyContext = (context as any) as GraphQLProxyContext;
-
-        if (request.http) {
-            for (let [key, value] of request.http.headers) {
-                console.log(`HEADERS: ${key} = ${value}`);
-            }
-        }
 
         if (request.http && contextData.token) {
             request.http.headers.set('Authorization', contextData.token);
@@ -88,6 +84,13 @@ const gateway = new ApolloGateway({
 
 const server = new ApolloServer({
     subscriptions: false,
+
+    cors: {
+        // TODO: Add better check
+        origin: true,
+
+        credentials: true,
+    },
 
     gateway,
 

@@ -15,3 +15,4 @@ class Query(AuthQuery, graphene.ObjectType):
 
 
 schema = build_schema(query=Query, mutation=Mutation)
+# print(str(schema))

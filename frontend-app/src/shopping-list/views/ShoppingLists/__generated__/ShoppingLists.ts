@@ -12,11 +12,29 @@ export interface ShoppingLists_shoppingLists_edges_node_owner {
   email: string;
 }
 
+export interface ShoppingLists_shoppingLists_edges_node_products_edges_node {
+  __typename: "Product";
+  id: string;
+  name: string;
+  image: string | null;
+}
+
+export interface ShoppingLists_shoppingLists_edges_node_products_edges {
+  __typename: "ProductEdge";
+  node: ShoppingLists_shoppingLists_edges_node_products_edges_node | null;
+}
+
+export interface ShoppingLists_shoppingLists_edges_node_products {
+  __typename: "ProductConnection";
+  edges: (ShoppingLists_shoppingLists_edges_node_products_edges | null)[];
+}
+
 export interface ShoppingLists_shoppingLists_edges_node {
   __typename: "ShoppingList";
   id: string;
   name: string;
   owner: ShoppingLists_shoppingLists_edges_node_owner | null;
+  products: ShoppingLists_shoppingLists_edges_node_products | null;
 }
 
 export interface ShoppingLists_shoppingLists_edges {

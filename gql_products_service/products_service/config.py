@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from environs import Env
 
 env = Env()
@@ -14,7 +16,13 @@ class EnvConfig:
 
     MONGO_HOST = env.str("MONGODB_HOST", "mongodb")
 
-    JWT_HEADER_TYPE = "JWT"
-    JWT_TOKEN_ARGUMENT_NAME = "token"
-
     JWT_SECRET_KEY = env.str('JWT_SECRET_KEY', 'knowledge_graphql_microservices')
+    JWT_ALGORITHM = "HS256"
+    JWT_ISSUER = "Jorgen Ader"
+    JWT_HEADER_TYPE = "JWT"
+    JWT_ACCESS_COOKIE_NAME = "JWT"
+    JWT_REFRESH_COOKIE_NAME = "JWT-refresh-token"
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
+
+    JWT_IDENTITY_CLAIM = "email"

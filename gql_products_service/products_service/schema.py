@@ -30,3 +30,4 @@ class Query(ObjectType):
 
 
 schema = build_schema(Query, mutation=Mutation)
+# print(str(schema))

@@ -10,7 +10,6 @@ import React, {
 } from 'react';
 
 import { User } from '@frontend-app/utils/types';
-import { getLocalStorage } from '@frontend-app/utils/Window';
 
 import { useTokenAuth, useViewer, TokenAuthVariables } from './helpers';
 
@@ -46,8 +45,6 @@ export interface AuthContextValue {
 
 export const AuthContext = createContext<AuthContextValue>(null as any);
 
-const storage = getLocalStorage();
-
 const authReducer = (
     state: AuthenticationState,
     action: Actions
@@ -56,14 +53,10 @@ const authReducer = (
         case 'login':
             const { user } = action;
 
-            storage.setItem('user', JSON.stringify(user));
-
             return {
                 user,
             };
         case 'logout':
-            storage.removeItem('user');
-
             return {
                 user: null,
             };
@@ -103,7 +96,7 @@ export const AuthProvider: FC = ({ children }) => {
                 result.data.tokenAuth &&
                 result.data.tokenAuth.token
             ) {
-                storage.setItem('token', result.data.tokenAuth.token);
+                // storage.setItem('token', result.data.tokenAuth.token);
                 getViewer();
             }
         },
@@ -111,16 +104,8 @@ export const AuthProvider: FC = ({ children }) => {
     );
 
     const logout = useCallback(async () => {
-        storage.removeItem('token');
         await client.resetStore();
         dispatch({ type: 'logout' });
-    }, []);
-
-    useEffect(() => {
-        const token = storage.getItem('token');
-        if (token) {
-            getViewer();
-        }
     }, []);
 
     const contextValue = useMemo<AuthContextValue>(() => {

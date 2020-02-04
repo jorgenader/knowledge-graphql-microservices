@@ -20,7 +20,7 @@ def create_context_user_queryset(model, info, **args):
 
 
 class Query(ObjectType):
-    shopping_list = Field(ShoppingList, ok=String(required=True))
+    shopping_list = Field(ShoppingList, pk=String(required=True))
     shopping_lists = MongoengineConnectionField(ShoppingList, get_queryset=create_context_user_queryset)
 
     @staticmethod
@@ -31,3 +31,4 @@ class Query(ObjectType):
 
 
 schema = build_schema(Query, mutation=Mutation)
+# print(str(schema))

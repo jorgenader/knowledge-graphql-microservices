@@ -9,7 +9,6 @@ import { onError } from 'apollo-link-error';
 import { createHttpLink } from 'apollo-link-http';
 
 import { SETTINGS } from '@frontend-app/settings';
-import { getLocalStorage } from '@frontend-app/utils/Window';
 
 export const createApolloClient = (
     initialStore?: any,
@@ -35,18 +34,6 @@ export const createApolloClient = (
         cache = cache.restore(initialStore);
     }
 
-    const middlewareLink = new ApolloLink((operation, forward) => {
-        const token = getLocalStorage().getItem('token');
-        if (token || initialToken) {
-            operation.setContext({
-                headers: {
-                    Authorization: `JWT ${token || initialToken}`,
-                },
-            });
-        }
-        return forward(operation);
-    });
-
     // TODO: Better error parser
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
@@ -64,10 +51,10 @@ export const createApolloClient = (
     // TODO: Figure out how to set token correctly after login
     const httpLink = createHttpLink({
         uri: `${SETTINGS.BACKEND_SITE_URL}${SETTINGS.API_BASE}`,
-        credentials: 'same-origin',
+        credentials: 'include',
     });
 
-    const links = ApolloLink.from([errorLink, middlewareLink, httpLink]);
+    const links = ApolloLink.from([errorLink, httpLink]);
 
     return new ApolloClient({
         ssrMode: true,

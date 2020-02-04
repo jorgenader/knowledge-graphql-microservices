@@ -6,13 +6,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
 
 from graphene_django.views import GraphQLView
+from graphql_jwt.decorators import jwt_cookie
 
 
 admin.autodiscover()
 
 urlpatterns = [
     url(r"^adminpanel/", admin.site.urls),
-    url(r"^graphql$", csrf_exempt(GraphQLView.as_view(graphiql=settings.DEBUG))),
+    url(r"^graphql$", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=settings.DEBUG)))),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

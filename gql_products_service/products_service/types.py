@@ -1,4 +1,4 @@
-from graphene import Field, ID, ObjectType
+from graphene import Field, ID, ObjectType, String
 from graphene.relay import Node
 from graphene_federation import extend, external, key
 from graphene_mongo import MongoengineObjectType
@@ -7,12 +7,9 @@ from products_service.context import GraphQLContext
 from products_service.models import ProductModel
 
 
-@extend("id")
+@extend("email")
 class User(ObjectType):
-    id = external(ID(required=True))
-
-    class Meta:
-        interfaces = (Node,)
+    email = external(String(required=True))
 
 
 @extend("id")

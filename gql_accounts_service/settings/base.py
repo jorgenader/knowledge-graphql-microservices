@@ -265,10 +265,15 @@ GRAPHENE = {
 
 GRAPHQL_JWT = {
     "JWT_SECRET_KEY": env.str("DJANGO_JWT_SECRET_KEY", "knowledge_graphql_microservices"),
+    "JWT_ALGORITHM": "HS256",
+    "JWT_ISSUER": "Jorgen Ader",
+
     "JWT_VERIFY_EXPIRATION": True,
-    "JWT_EXPIRATION_DELTA": timedelta(days=15),  # TODO: REWORK ENTIRE TOKEN SYSTEM
-    "JWT_PAYLOAD_GET_USERNAME_HANDLER": lambda payload: payload.get('identity'),
-    "JWT_PAYLOAD_HANDLER": "gql_accounts_service.jwt.create_jwt_payload",
+    "JWT_EXPIRATION_DELTA": timedelta(minutes=15),
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
+
+    "JWT_COOKIE_NAME": "JWT",
+    'JWT_REFRESH_TOKEN_COOKIE_NAME': 'JWT-refresh-token',
 }
 
 
