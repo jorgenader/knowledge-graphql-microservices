@@ -91,7 +91,7 @@
     "reactstrap": "7.1.0",
     "rimraf": "3.0.0",
     "sass-loader": "8.0.0",
-    "serialize-javascript": "2.1.0",
+    "serialize-javascript": "2.1.1",
     "tg-loading-bar": "1.0.0-alpha.39",
     "tg-named-routes": "1.0.0-alpha.39",
     "throng": "4.0.0",
