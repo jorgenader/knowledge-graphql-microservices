@@ -12,7 +12,7 @@ import { SETTINGS } from '@frontend-app/settings';
 
 export const createApolloClient = (
     initialStore?: any,
-    initialToken: string | null = null
+    token: string | null = null
 ) => {
     let cache = new InMemoryCache({
         dataIdFromObject: (result: { nodeId?: string } & IdGetterObj) => {
@@ -48,13 +48,24 @@ export const createApolloClient = (
         }
     });
 
+    const middlewareLink = new ApolloLink((operation, forward) => {
+        if (token) {
+            operation.setContext({
+                headers: {
+                    Authorization: `JWT ${token}`,
+                },
+            });
+        }
+        return forward(operation);
+    });
+
     // TODO: Figure out how to set token correctly after login
     const httpLink = createHttpLink({
         uri: `${SETTINGS.BACKEND_SITE_URL}${SETTINGS.API_BASE}`,
         credentials: 'include',
     });
 
-    const links = ApolloLink.from([errorLink, httpLink]);
+    const links = ApolloLink.from([middlewareLink, errorLink, httpLink]);
 
     return new ApolloClient({
         ssrMode: true,

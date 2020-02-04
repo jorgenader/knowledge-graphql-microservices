@@ -20,6 +20,6 @@ class ShoppingListModel(Document):
 
     owner = fields.EmbeddedDocumentField(Owner, required=True)
 
-    products = fields.EmbeddedDocumentListField(Product, required=True)
+    products = fields.EmbeddedDocumentListField(Product)
 
     created_at = fields.DateTimeField(default=datetime.utcnow)

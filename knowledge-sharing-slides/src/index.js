@@ -154,10 +154,9 @@ const Presentation = () => (
         <ListItem color="primary" fontSize="h3">
           Putting it together
         </ListItem>
-        {/* If I fix it*/}
-        {/*<ListItem color="primary" fontSize="h3">*/}
-        {/*  Demo*/}
-        {/*</ListItem>*/}
+        <ListItem color="primary" fontSize="h3">
+          Demo
+        </ListItem>
       </OrderedList>
     </Slide>
 
@@ -168,7 +167,6 @@ const Presentation = () => (
         <Text fontSize={32}>Ask what you need</Text>
         <Text fontSize={32}>All the resources in single request</Text>
         <Text fontSize={32}>Strongly typed</Text>
-        <Text fontSize={32}>Programming language agnostic</Text>
       </FlexBox>
     </Slide>
 
@@ -176,7 +174,7 @@ const Presentation = () => (
       <FlexBox height="100%" flexDirection="column">
         <Image src={graphQLLogo} width={100} />
         <Heading fontSize="h3">How does it work</Heading>
-        <Text fontSize={32}>Schemas</Text>
+        <Text fontSize={32}>Schema</Text>
         <Text fontSize={32}>Queries</Text>
         <Text fontSize={32}>Mutations</Text>
         <Text fontSize={32}>Resolvers</Text>
@@ -272,11 +270,12 @@ const Presentation = () => (
         <Heading fontSize="h2">Thank you</Heading>
         <Heading fontSize="h2">Questions?</Heading>
       </FlexBox>
-      <Notes>
-        <p>
-          https://www.apollographql.com/docs/apollo-server/federation/introduction/
-        </p>
-      </Notes>
+    </Slide>
+
+    <Slide>
+      <FlexBox height="100%" flexDirection="column">
+        <Heading fontSize="h2">Demo time</Heading>
+      </FlexBox>
     </Slide>
 
     <Slide>
@@ -309,6 +308,11 @@ const Presentation = () => (
           <ListItem>
             <Link href="https://www.apollographql.com/docs/apollo-server/federation/federation-spec/">
               https://www.apollographql.com/docs/apollo-server/federation/federation-spec/
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="https://github.com/metsavaht/knowledge-graphql-microservices">
+              https://github.com/metsavaht/knowledge-graphql-microservices
             </Link>
           </ListItem>
         </UnorderedList>

@@ -1,6 +1,6 @@
 from functools import cached_property
 
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, get_raw_jwt
 
 from lists_service.data_loaders import ShoppingListByIdLoader
 
@@ -11,6 +11,7 @@ class GraphQLContext:
 
     @cached_property
     def user(self) -> str:
+        print(get_raw_jwt())
         return get_jwt_identity()
 
     @cached_property

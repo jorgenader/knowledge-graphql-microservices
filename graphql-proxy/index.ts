@@ -1,12 +1,13 @@
 import dotEnv from 'dotenv';
 import { GraphQLRequestContext } from 'apollo-server-types';
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
 import {
     ApolloGateway,
     ServiceEndpointDefinition,
     RemoteGraphQLDataSource,
 } from '@apollo/gateway';
-import express from 'express';
+import CookieParser from 'cookie-parser';
 
 // Load config values from env
 dotEnv.config();
@@ -20,7 +21,7 @@ const LISTS_SERVICE = process.env.LISTS_SERVICE_URL;
 const responseHeadersToForward: Array<string> = ['vary', 'set-cookie'];
 
 interface GraphQLProxyContext {
-    token?: string;
+    tokenHeader?: string;
     res?: express.Response;
 }
 
@@ -43,13 +44,22 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
             // TODO: Add cookie-parser and see if it works
             //  Otherwise switch to koa or apollo-server-express
+
+            // Parse raw header to forward it to correct service
+            // `set-cookie` header is mangled otherwise
+            const headers: { [key: string]: string[] | undefined } = (http.headers as any).raw();
+
             responseHeadersToForward.forEach(name => {
-                const value = http.headers.get(name);
-                if (value != null) {
-                    // `res` is the response we are sending to the client.
-                    res.setHeader(name, value);
-                    console.log(`<- HEADERS: ${name} = ${value}`);
+                const value = headers[name];
+
+                if (!value) {
+                    return;
                 }
+
+                // `res` is the response we are sending to the client.
+                res.setHeader(name, value);
+
+                console.log(`<- HEADERS: ${name} = ${value}`);
             });
         }
 
@@ -62,14 +72,16 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     }: Pick<GraphQLRequestContext<TContext>, 'request' | 'context'>) {
         const contextData: GraphQLProxyContext = (context as any) as GraphQLProxyContext;
 
-        if (request.http && contextData.token) {
-            request.http.headers.set('Authorization', contextData.token);
+        console.log("tokenHeader", contextData.tokenHeader);
+
+        if (request.http && contextData.tokenHeader) {
+            request.http.headers.set('Authorization', contextData.tokenHeader);
         }
     }
 }
 
 const gateway = new ApolloGateway({
-    debug: true,
+    // debug: true,
 
     serviceList: [
         { name: 'accounts', url: `${ACCOUNTS_SERVICE}/graphql` },
@@ -85,25 +97,38 @@ const gateway = new ApolloGateway({
 const server = new ApolloServer({
     subscriptions: false,
 
+    gateway,
+
+    context: ({ req, res }) => {
+        console.log('Cookies: ', req.cookies);
+
+        // get the user token from the headers
+        let tokenHeader = req.headers.authorization || '';
+
+        if (!tokenHeader && req.cookies['JWT']) {
+            tokenHeader = `JWT ${req.cookies['JWT']}`;
+        }
+
+        console.log(tokenHeader);
+
+        // add the user to the context
+        return { tokenHeader, res };
+    },
+});
+
+const app = express();
+app.use(CookieParser());
+server.applyMiddleware({
+    app,
+    bodyParserConfig: { limit: '50mb' },
     cors: {
         // TODO: Add better check
         origin: true,
-
         credentials: true,
-    },
-
-    gateway,
-
-    context: ({ req }) => {
-        // get the user token from the headers
-        const token = req.headers.authorization || '';
-
-        // add the user to the context
-        return { token, res: req.res };
     },
 });
 
 // The `listen` method launches a web server.
-server.listen(PORT).then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+app.listen(PORT, () => {
+    console.log(`🚀  Server ready at http://localhost:${PORT}/graphql`);
 });

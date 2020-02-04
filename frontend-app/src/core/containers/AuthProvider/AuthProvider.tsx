@@ -78,7 +78,7 @@ export const AuthProvider: FC = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, {
         user: null,
     });
-    const [getViewer] = useViewer(user => {
+    const { refetch: fetchViewer, error } = useViewer(user => {
         if (user.viewer) {
             dispatch({ type: 'login', user: user.viewer });
         }
@@ -96,8 +96,7 @@ export const AuthProvider: FC = ({ children }) => {
                 result.data.tokenAuth &&
                 result.data.tokenAuth.token
             ) {
-                // storage.setItem('token', result.data.tokenAuth.token);
-                getViewer();
+                await fetchViewer();
             }
         },
         [onTokenAuth]

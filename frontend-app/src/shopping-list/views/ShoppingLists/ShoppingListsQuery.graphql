@@ -8,14 +8,11 @@ query ShoppingLists {
                     id
                     email
                 }
-                products(first: 4) {
-                    edges {
-                        node {
-                            id
-                            name
-                            image
-                        }
-                    }
+                products {
+                    id
+                    name
+                    image
+                    url
                 }
             }
         }

@@ -1,11 +1,9 @@
-import loadable from '@loadable/component';
 import { buildUrlCache, NamedRouteConfig } from 'tg-named-routes';
 
 import App from '@frontend-core/containers/AppShell';
 import PageNotFound from '@frontend-core/views/PageNotFound';
 import { createAuthenticationRoutes } from '@frontend-app/auth/routes';
-
-const Home = loadable(() => import('../views/Home'));
+import { createLandingRoutes } from '@frontend-app/shopping-list/routes';
 
 const NotFoundRoute: NamedRouteConfig = {
     name: '404',
@@ -17,12 +15,7 @@ const routeConfig: NamedRouteConfig[] = [
     {
         component: App,
         routes: [
-            {
-                path: '/',
-                exact: true,
-                name: 'landing',
-                component: Home,
-            },
+            createLandingRoutes(NotFoundRoute),
             createAuthenticationRoutes(NotFoundRoute),
             NotFoundRoute,
         ],

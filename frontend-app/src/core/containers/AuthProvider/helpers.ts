@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { TokenAuth, TokenAuthVariables } from './__generated__/TokenAuth';
 import { Viewer } from './__generated__/Viewer';
@@ -16,7 +16,7 @@ export function useTokenAuth() {
 }
 
 export function useViewer(cb?: (data: Viewer) => void) {
-    return useLazyQuery<Viewer>(UserDetailsQuery, {
+    return useQuery<Viewer>(UserDetailsQuery, {
         onCompleted: cb,
     });
 }

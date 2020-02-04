@@ -1,4 +1,5 @@
 import graphene
+from flask_jwt_extended import jwt_required
 
 from products_service.context import GraphQLContext
 from products_service.models import ProductModel, Owner
@@ -24,6 +25,7 @@ class CreateProductMutation(graphene.Mutation):
         data = ProductCreateInput(required=True)
 
     @staticmethod
+    @jwt_required
     def mutate(root, info, data: ProductCreateInput):
         context: GraphQLContext = info.context
         product = ProductModel(
@@ -45,6 +47,7 @@ class UpdateProductByIdMutation(graphene.Mutation):
         data = ProductUpdateInput()
 
     @staticmethod
+    @jwt_required
     def mutate(root, info, pk, data: ProductUpdateInput = None):
         product = ProductModel.objects.get(pk=pk)
 

@@ -72,6 +72,8 @@ i18next.init({
 // Initialize `koa-router`
 const router = new Router();
 
+// router.use(cookie());
+
 router.get('/_health', ctx => {
     ctx.status = 200;
     ctx.body = 'OK';
@@ -93,7 +95,8 @@ router.get(
     async (ctx, next) => {
         const { i18n } = ctx.state;
 
-        const client = createApolloClient();
+        logger.info('COOKIES: %s', ctx.cookies.get('JWT'));
+        const client = createApolloClient(undefined, ctx.cookies.get('JWT'));
 
         // Set the language
         const { language } = ctx.state;
@@ -121,7 +124,11 @@ router.get(
             </ApolloProvider>
         );
 
-        await getDataFromTree(App);
+        try {
+            await getDataFromTree(App);
+        } catch (e) {
+            logger.error(e);
+        }
 
         ctx.state.markup = renderToString(
             <ChunkExtractorManager extractor={extractor}>
